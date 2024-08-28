@@ -1,12 +1,21 @@
-import { useState } from "react";
-
 const initialBoard = [
     [null,null,null],
     [null,null,null],
     [null,null,null]
 ];
 
-export default function GameBoard({onselectSquare,activePlayerSymbol}){
+export default function GameBoard({onSelectSquare,turns}){
+
+    // We do not need to manage any state here. This concept is called deriving state from props. We are producing some derived state, some computed value. In this case Gameboard is a derived value which is produced from the gameturns state in the App component.
+    let gameBoard = initialBoard;
+    for (const turn of turns){
+        const {square, player} = turn;
+        const {row, col} = square;
+
+        gameBoard[row][col]=player;
+    }
+
+    /*Without the above property code will be like :
     const [gameBoard, setGameBoard] = useState(initialBoard);
 
     function handleSelectSquare(rowIndex,colIndex){
@@ -16,15 +25,15 @@ export default function GameBoard({onselectSquare,activePlayerSymbol}){
             return updatedBoard;
         })
         //should select a square on button click
-        onselectSquare();
-    }
+        //onselectSquare();
+    }*/ 
 
     return(
         <ol id="game-board">
           {gameBoard.map((row, rowIndex)=><li key={rowIndex} >
              <ol className="row">
             {row.map((symbol,colIndex)=><li key={colIndex}>
-                <button onClick={() => handleSelectSquare(rowIndex,colIndex)} className="symbol-button">{symbol}</button>
+                <button onClick={() => onSelectSquare(rowIndex,colIndex)} className="symbol-button">{symbol}</button>
             </li>)}
             </ol>
         </li>)}
